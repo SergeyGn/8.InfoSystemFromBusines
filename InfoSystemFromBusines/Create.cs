@@ -7,9 +7,10 @@ namespace InfoSystemFromBusines
 {
     class Create
     {
-        private static double _salary = 12100.00;
+        public static double salary = 12100.00;
       public static void MenuCreate()
        {
+            Console.Clear();
             Console.WriteLine("Для создания департамента нажмите 1" +
                             "\nДля создания сотрудника нажмите 2" +
                             "\nВыход в главное меню нажмите Q");
@@ -18,26 +19,36 @@ namespace InfoSystemFromBusines
             {
                 case ConsoleKey.D1:
                     CreateDepartment(departments);
+                    MenuCreate();
                     break;
                 case ConsoleKey.D2:
                     CreateWorker(workers,departments);
+                    MenuCreate();
                     break;
                 case ConsoleKey.Q:
                     MainMenu();
+                    break;
+                default:
+                    Console.WriteLine("Нет такого варианта ответа");
+                    Console.Clear();
+                    MenuCreate();
                     break;
             }
        }
        public static List<Department> CreateDepartment(List<Department> departments)
         {
+            Console.Clear();
             Console.WriteLine("Введите название нового департамента");
-            string nameDepartment = Console.ReadLine();
-            departments.Add(new Department() { DepartmentName = nameDepartment,
-                                               IdentifierDepartment=GetIdentifierDepartment(),
-                                               Quantity = 0 });
+            string nameDepartment = CheckNameDepartment(Console.ReadLine(),departments);
+            Console.WriteLine("Введите дату основания департамента");
+            DateTime dateCreate = CheckDate();
+            Console.WriteLine("Выбирете департамент сотрудника");
+            departments.Add(new Department(nameDepartment,dateCreate,0,GetIdentifierDepartment()));
             return departments;   
         }
         public static List<Worker> CreateWorker(List<Worker> workers, List<Department> departments)
         {
+            Console.Clear();
             Console.WriteLine("Введите имя нового сотрудника");
             string firstName = Console.ReadLine();
 
@@ -67,12 +78,22 @@ namespace InfoSystemFromBusines
                 identifier,
                 startDateCompany,
                 experience,
-                _salary,
+                salary,
                 coefficientDepartment)
-            ) ;
-            department.Quantity += 1;
+            );
+            for (int i = 0; i < departments.Count; i++)//Как проще добаваить количество сотрудников?
+            {
+                if (departments[i].DepartmentName == departmentName)
+                {
+                    departments.Add(new Department(departments[i].DepartmentName,
+                        departments[i].DateCreateDepartment,
+                        departments[i].Quantity + 1,
+                        departments[i].IdentifierDepartment));
+                    departments.RemoveAt(i);
+                    break;
+                }
+            }
             return workers;
-
         }
         public static double GetCoefficientDepartment(string identifierDepartment)
         {
@@ -94,7 +115,7 @@ namespace InfoSystemFromBusines
             }
             return coefficient;
         }
-        static string GetIdentifierDepartment()
+       public static string GetIdentifierDepartment()
         {
             string[] nameIdentifierDepartment = new string[4] { "нет", "низкий", "средний", "высокий" };
             Console.WriteLine("Выберите уровень доступа");

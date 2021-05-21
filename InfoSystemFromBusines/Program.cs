@@ -36,6 +36,7 @@ namespace InfoSystemFromBusines
         }
         public static void MainMenu()
         {
+            Console.Clear();
             Console.WriteLine("Для создания департамента или сотрудника нажмите 1" +
                 "\nДля просмотра департамента или сотрудника нажмите 2" +
                 "\nДля выхода нажмите Q");
@@ -52,6 +53,11 @@ namespace InfoSystemFromBusines
                     SerializeDepartment(departments);
                     SerializeWorkers(workers);
                     Console.WriteLine("Всего хорошего");
+                    break;
+                default:
+                    Console.WriteLine("Нет такого варианта ответа");
+                    Console.Clear();
+                    MainMenu();
                     break;
             }
         }
@@ -105,6 +111,7 @@ namespace InfoSystemFromBusines
             return date;
 
         }
+
         public static int CheckNumber(int minValue, int maxValue)
         {
             string number = Console.ReadLine();
@@ -142,6 +149,22 @@ namespace InfoSystemFromBusines
             }
             return IsFile;
         }
+
+        public static string CheckNameDepartment(string name, List<Department> departments)
+        {
+            if (departments == null)
+            {
+                for (int i = 0; i <= departments.Count; i++)
+                {
+                    if (departments[i].DepartmentName.ToLower() == name.ToLower())
+                    {
+                        name = Console.ReadLine();
+                        CheckNameDepartment(name, departments);
+                    }
+                }
+            }
+            return name;
+        }
         public static int GetAge(DateTime countdownDate)
         {
             int years = DateTime.Now.Year - countdownDate.Year;
@@ -161,6 +184,26 @@ namespace InfoSystemFromBusines
                 }
             }
             return years;
+        }
+        public static bool AskQuestion(string question)
+        {
+            Console.WriteLine($"{question}y/n");
+            bool IsYes=false;
+            ConsoleKeyInfo input = Console.ReadKey(true);
+            switch (input.Key)
+            {
+                case ConsoleKey.Y:
+                    IsYes = true;
+                    break;
+                case ConsoleKey.N:
+                    IsYes = false;
+                    break;
+                default:
+                    Console.WriteLine("Неправильный ввод");
+                    AskQuestion(question);
+                    break;
+            }
+            return IsYes;
         }
     }
 }

@@ -46,7 +46,7 @@ namespace InfoSystemFromBusines
         /// Коэффициент зависящий от департамента
         /// </summary>
         private double _coefficientDepartment;
-        double GetWages()
+        public double GetWages()
         {
             double wages=_salary+_salary*0.1 *_expirience+_salary*_coefficientDepartment;
             return wages;
