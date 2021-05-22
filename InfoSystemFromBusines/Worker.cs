@@ -51,11 +51,13 @@ namespace InfoSystemFromBusines
             double wages=_salary+_salary*0.1 *_expirience+_salary*_coefficientDepartment;
             return wages;
         }
-        public Worker(string FirstName, 
+        public Worker(
+            string FirstName, 
             string LastName, 
             int age, DateTime Birthday, 
             string DepartmentName, 
-            string Identifier, DateTime StartDateCompany, 
+            string Identifier, 
+            DateTime StartDateCompany, 
             int Expirience, 
             double Salary, 
             double CoefficientDepartment)

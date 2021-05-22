@@ -69,72 +69,82 @@ namespace InfoSystemFromBusines
                     MenuShowWorkerEnd(workers, departments, nameDepartment);
                     break;
             }
-            
+            SerializeWorkers(workers);
+            SerializeDepartment(departments);
         }
         private static void ShowDepartment(List<Department> departments, List<Worker> workers)
         {
             Console.Clear();
-            Console.WriteLine("в каком порядке показать департаменты?" +
-                "\n[1]по названию" +
-                "\n[2]по уровню доступа" +
-                "\n[3]по количеству сотрудников" +
-                "\n[4]по дате создания департамента" +
-                "\n[Q]назад");
-            ConsoleKeyInfo input = Console.ReadKey(true);
-            
-            switch (input.Key)
+            if (departments.Count > 0)
             {
-                case ConsoleKey.D1:
-                    departments.Sort((a, b) => a.DepartmentName.CompareTo(b.DepartmentName));
-                    break;
-                case ConsoleKey.D2:
-                    departments.Sort((a, b) => a.IdentifierDepartment.CompareTo(b.IdentifierDepartment));
-                    break;
-                case ConsoleKey.D3:
-                    departments.Sort((a, b) => a.Quantity.CompareTo(b.Quantity));
-                    break;
-                case ConsoleKey.D4:
-                    departments.Sort((a, b) => a.DateCreateDepartment.CompareTo(b.DateCreateDepartment));
-                    break;
-                case ConsoleKey.Q:
-                    MenuShow();
-                    break;
-                default:
-                    Console.WriteLine("Такого варианта нет, попробуйте ещё раз");
-                    MenuShow();
-                    break;
-            }
-            Console.Clear();
-            for (int i = 0; i < departments.Count; i++)
-            {
-                Console.WriteLine($"[{i + 1}]{departments[i].DepartmentName}" +
-                    $"\nуровень доступа:{departments[i].IdentifierDepartment}" +
-                    $"\nкол-во сотрудников:{departments[i].Quantity}" +
-                    $"\nдата создания:{departments[i].DateCreateDepartment.ToShortDateString()}" +
-                    $"\n");
-            }
-            Console.WriteLine("Для дальнейшей работы с департаментом введите его номер");
-            int numberItem = CheckNumber(0,departments.Count)-1;
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Название департамента:{departments[numberItem].DepartmentName}" +
-                    $"\nуровень доступа:{departments[numberItem].IdentifierDepartment}" +
-                    $"\nкол-во сотрудников:{departments[numberItem].Quantity}" +
-                    $"\nдата создания:{departments[numberItem].DateCreateDepartment.ToShortDateString()}" +
-                    $"\n");
-            Console.ResetColor();
-            if(AskQuestion("Показать сотрудников этого департамента?"))
-            {
-                workers.Sort((a, b) => a.FirstName.CompareTo(b.FirstName));
-                for(int i=0;i<workers.Count;i++)
+                Console.WriteLine("в каком порядке показать департаменты?" +
+                    "\n[1]по названию" +
+                    "\n[2]по уровню доступа" +
+                    "\n[3]по количеству сотрудников" +
+                    "\n[4]по дате создания департамента" +
+                    "\n[Q]назад");
+                ConsoleKeyInfo input = Console.ReadKey(true);
+
+                switch (input.Key)
                 {
-                    if (departments[numberItem].DepartmentName == workers[i].DepartmentName)
+                    case ConsoleKey.D1:
+                        departments.Sort((a, b) => a.DepartmentName.CompareTo(b.DepartmentName));
+                        break;
+                    case ConsoleKey.D2:
+                        departments.Sort((a, b) => a.IdentifierDepartment.CompareTo(b.IdentifierDepartment));
+                        break;
+                    case ConsoleKey.D3:
+                        departments.Sort((a, b) => a.Quantity.CompareTo(b.Quantity));
+                        break;
+                    case ConsoleKey.D4:
+                        departments.Sort((a, b) => a.DateCreateDepartment.CompareTo(b.DateCreateDepartment));
+                        break;
+                    case ConsoleKey.Q:
+                        MenuShow();
+                        break;
+                    default:
+                        Console.WriteLine("Такого варианта нет, попробуйте ещё раз");
+                        MenuShow();
+                        break;
+                }
+                Console.Clear();
+                for (int i = 0; i < departments.Count; i++)
+                {
+                    Console.WriteLine($"[{i + 1}]{departments[i].DepartmentName}" +
+                        $"\nуровень доступа:{departments[i].IdentifierDepartment}" +
+                        $"\nкол-во сотрудников:{departments[i].Quantity}" +
+                        $"\nдата создания:{departments[i].DateCreateDepartment.ToShortDateString()}" +
+                        $"\n");
+                }
+                Console.WriteLine("Для дальнейшей работы с департаментом введите его номер");
+                int numberItem = CheckNumber(0, departments.Count);
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Название департамента:{departments[numberItem].DepartmentName}" +
+                        $"\nуровень доступа:{departments[numberItem].IdentifierDepartment}" +
+                        $"\nкол-во сотрудников:{departments[numberItem].Quantity}" +
+                        $"\nдата создания:{departments[numberItem].DateCreateDepartment.ToShortDateString()}" +
+                        $"\n");
+                Console.ResetColor();
+                if (AskQuestion("Показать сотрудников этого департамента?"))
+                {
+                    workers.Sort((a, b) => a.FirstName.CompareTo(b.FirstName));
+                    for (int i = 0; i < workers.Count; i++)
                     {
-                        Console.WriteLine($"{workers[i].FirstName} {workers[i].LastName}");
+                        if (departments[numberItem].DepartmentName == workers[i].DepartmentName)
+                        {
+                            Console.WriteLine($"{workers[i].FirstName} {workers[i].LastName}");
+                        }
                     }
                 }
+                MenuShowDepartmentEnd(departments, workers, departments[numberItem].DepartmentName);
             }
-            MenuShowDepartmentEnd(departments, workers, departments[numberItem].DepartmentName);
+            else
+            {
+                Console.WriteLine("Департаментов нет. Нажмите любую кнопку для выхода в главное меню");
+                Console.ReadKey(true);
+                MainMenu();
+            }
         }
         
         private static void ShowWorker(List<Worker> workers,List<Department> departments)
@@ -181,7 +191,7 @@ namespace InfoSystemFromBusines
             Console.Clear();
             for (int i = 0; i < workers.Count; i++)
             {
-                Console.WriteLine($"[{i + 1}]{workers[i].FirstName}-{workers[i].LastName}" +
+                Console.WriteLine($"[{i + 1}]{workers[i].FirstName} {workers[i].LastName}" +
                     $"\nДепартамент:{workers[i].DepartmentName}" +
                     $"\nуровень доступа:{workers[i].Identifier}" +
                     $"\nстаж работы:{workers[i].Experience}" +
@@ -190,18 +200,27 @@ namespace InfoSystemFromBusines
                     $"\n");
             }
             Console.WriteLine("Для дальнейшей работы с сотрудником введите его номер");
-            int numberItem = CheckNumber(0, workers.Count) - 1;
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{workers[numberItem].FirstName} {workers[numberItem].LastName}" +
-                $"\nДепартамент:{workers[numberItem].DepartmentName}" +
-                $"\nуровень доступа:{workers[numberItem].Identifier}" +
-                $"\nстаж работы:{workers[numberItem].Experience}" +
-                $"\nзарплата:{workers[numberItem].GetWages()}" +
-                $"\nкол-во полных лет:{workers[numberItem].Age}" +
-                $"\n");
-            Console.ResetColor();
-            MenuShowWorkerEnd(workers, departments, workers[numberItem].DepartmentName);
+            if (workers.Count == 0)
+            {
+                Console.WriteLine("Cотрудников нет.Нажмите любую кнопку для выхода в меню показа");
+                Console.ReadKey(true);
+                MenuShow();
+            }
+            else
+            {
+                int numberItem = CheckNumber(0, workers.Count);
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{workers[numberItem].FirstName} {workers[numberItem].LastName}" +
+                    $"\nДепартамент:{workers[numberItem].DepartmentName}" +
+                    $"\nуровень доступа:{workers[numberItem].Identifier}" +
+                    $"\nстаж работы:{workers[numberItem].Experience}" +
+                    $"\nзарплата:{workers[numberItem].GetWages()}" +
+                    $"\nкол-во полных лет:{workers[numberItem].Age}" +
+                    $"\n");
+                Console.ResetColor();
+                MenuShowWorkerEnd(workers, departments, workers[numberItem].DepartmentName);
+            }
         }
     }
 }

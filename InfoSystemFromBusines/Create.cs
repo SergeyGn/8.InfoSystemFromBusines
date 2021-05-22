@@ -10,6 +10,8 @@ namespace InfoSystemFromBusines
         public static double salary = 12100.00;
       public static void MenuCreate()
        {
+            SerializeWorkers(workers);
+            SerializeDepartment(departments);
             Console.Clear();
             Console.WriteLine("Для создания департамента нажмите 1" +
                             "\nДля создания сотрудника нажмите 2" +
@@ -39,10 +41,11 @@ namespace InfoSystemFromBusines
         {
             Console.Clear();
             Console.WriteLine("Введите название нового департамента");
-            string nameDepartment = CheckNameDepartment(Console.ReadLine(),departments);
+            string nameDepartment=Console.ReadLine();
+            nameDepartment=CheckNameDepartment(nameDepartment,departments);
             Console.WriteLine("Введите дату основания департамента");
             DateTime dateCreate = CheckDate();
-            Console.WriteLine("Выбирете департамент сотрудника");
+            Console.WriteLine("Выбирете департамент");
             departments.Add(new Department(nameDepartment,dateCreate,0,GetIdentifierDepartment()));
             return departments;   
         }
@@ -64,8 +67,9 @@ namespace InfoSystemFromBusines
             int experience = GetAge(startDateCompany);
 
             int age = GetAge(birthday);
-
-            Department department = PickDepartment(departments);
+            Console.WriteLine("Выбирете департамент");
+            Department department =new Department();
+            department = PickDepartment(departments);
             string departmentName = department.DepartmentName;
             string identifier = department.IdentifierDepartment;
             double coefficientDepartment = GetCoefficientDepartment(identifier);
@@ -123,7 +127,7 @@ namespace InfoSystemFromBusines
             {
                 Console.WriteLine($"[{i + 1}]{nameIdentifierDepartment[i]}");
             }
-            int result = CheckNumber(0, 4) - 1;
+            int result = CheckNumber(0, 4);
             return nameIdentifierDepartment[result];
         }
     }

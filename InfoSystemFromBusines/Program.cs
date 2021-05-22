@@ -18,18 +18,23 @@ namespace InfoSystemFromBusines
         {
             if (CheckFile(_pathDepartments) == true)
             {
-               departments=GetListDepartment(departments);
+                
+               departments=GetListDepartment();
             }
             else
             {
+                Console.WriteLine("В базе нет департаментов. Нажмите любую кнопку для создания");
+                Console.ReadKey(true);
                 CreateDepartment(departments);
             }
             if (CheckFile(_pathWorkers) == true)
             {
-               workers=GetListWorker(workers);
+               workers=GetListWorker();
             }
             else
             {
+                Console.WriteLine("В базе нет сотрудников. Нажмите любую кнопку для создания");
+                Console.ReadKey(true);
                 CreateWorker(workers,departments);
             }
             MainMenu();
@@ -61,7 +66,7 @@ namespace InfoSystemFromBusines
                     break;
             }
         }
-        public static List<Department> GetListDepartment(List<Department> departments)
+        private static List<Department> GetListDepartment()
         {
             string jsonDepartments = File.ReadAllText(_pathDepartments);
             departments = JsonConvert.DeserializeObject<List<Department>>(jsonDepartments);
@@ -70,7 +75,7 @@ namespace InfoSystemFromBusines
 
         }
 
-        public static List<Worker> GetListWorker(List<Worker> workers)
+        private static List<Worker> GetListWorker()
         {
             string jsonWorker = File.ReadAllText(_pathWorkers);
             workers = JsonConvert.DeserializeObject<List<Worker>>(jsonWorker);
@@ -78,12 +83,12 @@ namespace InfoSystemFromBusines
             return workers;
         }
 
-        private static void SerializeWorkers(List<Worker> workers)
+        public static void SerializeWorkers(List<Worker> workers)
         {
             string jsonWorkers = JsonConvert.SerializeObject(workers);
             File.WriteAllText(_pathWorkers, jsonWorkers);
         }
-        private static void SerializeDepartment(List<Department> departments)
+        public static void SerializeDepartment(List<Department> departments)
         {
             string jsonDepartments = JsonConvert.SerializeObject(departments);
             File.WriteAllText(_pathDepartments, jsonDepartments);
@@ -95,7 +100,7 @@ namespace InfoSystemFromBusines
             {
                 Console.WriteLine($"[№{++numberDepartment}]{listDepartment[i].DepartmentName}");
             }
-            return listDepartment[CheckNumber(0, numberDepartment) - 1];
+            return listDepartment[CheckNumber(0, numberDepartment)];
 
         }
         public static DateTime CheckDate()
@@ -117,7 +122,8 @@ namespace InfoSystemFromBusines
             string number = Console.ReadLine();
             if (int.TryParse(number, out int result) == true)
             {
-                if (result > minValue && result <= maxValue)
+                result -= 1;
+                if (result >= minValue && result < maxValue)
                 {
                     return result;
                 }
@@ -145,19 +151,24 @@ namespace InfoSystemFromBusines
             }
             else
             {
-                IsFile = true;
+                FileInfo file = new FileInfo(path);
+                if (file.Length > 10)
+                    IsFile = true;
+                else
+                    IsFile = false;
             }
             return IsFile;
         }
 
         public static string CheckNameDepartment(string name, List<Department> departments)
         {
-            if (departments == null)
+            if (departments.Count > 0)
             {
-                for (int i = 0; i <= departments.Count; i++)
+                for (int i = 0; i < departments.Count; i++)
                 {
                     if (departments[i].DepartmentName.ToLower() == name.ToLower())
                     {
+                        Console.WriteLine("Такой департамент уже существует, введите другое название");
                         name = Console.ReadLine();
                         CheckNameDepartment(name, departments);
                     }
